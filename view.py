@@ -47,16 +47,17 @@ def check_comment(input_string):
         section = match.group('section')
         date = match.group('date')
 
-        # Print the extracted information
-        print("File:", file_name.strip())
-        print("Description:", description.strip())
-        print("Author:", author.strip())
-        print("Email:", email.strip())
-        print("Course#:", course.strip())
-        print("Section#:", section.strip())
-        print("Date:", date.strip())
+        # # Print the extracted information
+        # print("File:", file_name.strip())
+        # print("Description:", description.strip())
+        # print("Author:", author.strip())
+        # print("Email:", email.strip())
+        # print("Course#:", course.strip())
+        # print("Section#:", section.strip())
+        # print("Date:", date.strip())
+        return 'Has Header Comment'
     else:
-        print("Pattern not found in the input string.")
+        return 'No Header Comment'
     
 def main():
     # Path to the main zip file containing other zip files
@@ -93,8 +94,15 @@ def main():
                         os.path.join(temp_dir, 'main.cpp'),
                         os.path.join(temp_dir, f'main_{email}.cpp')
                     )
-                    with open(f'main_{email}.cpp','w') as mainfile:
-                        
+                    with open(f'{temp_dir}/main_{email}.cpp','r') as mainfile:
+                        text = mainfile.read();
+                        has_header = f'// {check_comment(text)}\n\n'
+
+                    with open(f'{temp_dir}/main_{email}.cpp','w') as mainfile:
+                        mainfile.write(has_header);
+                        mainfile.write(text);
+
+
                     # Open the renamed 'main.cpp' file in Vim
                     subprocess.run(['vim', os.path.join(temp_dir, f'main_{email}.cpp')])
 
